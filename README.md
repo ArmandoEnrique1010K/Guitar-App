@@ -8,6 +8,8 @@ Simulador de guitarra electrica hecho con HTML, CSS, JavaScript, ReactJs y ToneJ
 
 <img src="assets/2024-11-10-01-25-59-image.png" title="" alt="" data-align="center">
 
+Este es una versión de prueba, aun me falta implementar varias cosas al proyecto.
+
 Para ejecutar este proyecto, es necesario tener instalado Node.js y Visual Studio Code. Sigue estos pasos:
 1. Descarga este proyecto y arrastra la carpeta "guitar-app" al editor de codigo fuente.
 2. Abre una nueva terminal, clic en "Terminal", opción "New Terminal".
