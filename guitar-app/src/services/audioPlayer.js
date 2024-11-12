@@ -4,20 +4,31 @@ import { getSupportedAudioFormat } from "./getSupportedAudioFormat";
 
 // Objeto para rastrear el estado de las teclas en reproducción activa
 const activeKeys = {};
+// Objeto para almacenar los reproductores
+const players = {};
+// Objeto para guardar la nota activa para cada cuerda
+let activeNotes = {};
+// Objeto para guardar la nota tocada anteriormente
+let previousNotePlayed = { rope: null, chord: null };
 
-const players = {}; // Objeto para almacenar los reproductores
-let activeNotes = {}; // Guardará la nota activa para cada cuerda
-let previousNotePlayed = { rope: null, chord: null }; // Guardará la nota tocada anteriormente
+// Almacena el valor devuelto por la función (mp3, wav o null)
+const audioFormat = getSupportedAudioFormat();
 
 // Función para precargar sonidos en función del nombre de la carpeta
 export function preloadSounds(name) {
-  const audioFormat = getSupportedAudioFormat();
-  // Salir si el formato de audio no es soportado
+  // Salir si el formato de audio no es soportado (return hace esa acción)
   if (!audioFormat) return;
 
+  // if (!audioFormat){
+  //   return
+  // }
+
+  // Ruta hacia la carpeta que contiene las notas de la guitarra
+  // Utiliza Template String para establecer el nombre de la carpeta y el tipo de archivo soportado por el navegador
+  // Ejemplo: /audio/cleanSolo/mp3/
   const audioPath = `/audio/${name}/${audioFormat}/`;
 
-  // Arreglo de nombres de archivos de audio que se van a pre-cargar
+  // El siguiente arreglo contiene los nombres de los archivos de audio que se van a pre-cargar
   const audioFiles = [
     "00",
     "01",
@@ -68,41 +79,54 @@ export function preloadSounds(name) {
     "46",
   ];
 
-  // Alternativa para crear el array usando un bucle
-  // const audioFiles = Array.from({ length: 47 }, (_, i) =>
+  // // Alternativa para crear el arreglo usando un bucle
+  // // Array.from es un metodo estatico que crea una nueva instancia de un arreglo a partir de un objeto iterable.
+  // // { length: 16 } crea un objeto con una propiedad "length" de 16, lo que define el tamaño del arreglo.
+  // const audioFiles = Array.from({ length: 46 }, (_, i) =>
+  // // convierte el índice i en una cadena y agrega ceros a la izquierda para que tenga al menos 2 dígitos.
   //   i.toString().padStart(2, "0")
   // );
+  // // Por ejemplo, el índice 1 se convierte en "01", 2 en "02", y así sucesivamente hasta 46.
 
-  // audioFiles.forEach((file) => {
-  //   const audioFile = `${audioPath}${file}.mp3`;
-  //   const player = new Tone.Player(audioFile).toDestination();
-  //   players[audioFile] = player;
-  // });
-
+  // Itera por cada elemento del arreglo audioFiles
   audioFiles.forEach((file) => {
+    // Define la ruta hacia el nombre del archivo de audio
+    // Ejemplo: /audio/cleanSolo/mp3/00.mp3
     const audioFile = `${audioPath}${file}.${audioFormat}`;
 
-    // Crea un nuevo player solo si no existe ya en el objeto players
+    // Crea un nuevo player o reproductor solo si no existe ya en el objeto players
     if (!players[audioFile]) {
+      //
+      // El constructor Tone.Player es un reproductor de archivos de audio con funciones de inicio, bucle y parada.
       players[audioFile] = new Tone.Player({
+        // Contiene los siguientes 2 parametros (ruta de la ubicación del archivo de audio y un valor booleano para
+        // indicar si se va reproducir automaticamente)
         url: audioFile,
         autostart: false,
-        // Evento de carga
+        // Evento que se ejecuta luego de cargar el archivo
         onload: () => {
-          console.log(`${audioFile} loaded`);
+          console.log(`Se cargo el archivo que se encuentra en ${audioFile}`);
         },
+        // Evento que se ejecuta si hay un error al cargar el archivo
         onerror: (error) => {
-          console.error(`Error loading ${audioFile}:`, error);
+          console.error(
+            `Error al cargar el archivo que se encuentra en ${audioFile}:`,
+            error
+          );
         },
-      }).toDestination();
+      });
+
+      // Por lo general el metodo toDestination del constructor Tone.Player sirve para "conectar la salida al nodo de destino del contexto".
+      players[audioFile].toDestination();
     }
   });
 }
 
-// Función para reproducir un sonido
+// Función para reproducir un sonido, requiere 8 argumentos
 export function playSound(
+  // Nombre de la carpeta
   name,
-  // Datos de las cuerdas y acordes
+  // Arreglo con los datos de las cuerdas y acordes
   data = [],
   // Número de cuerda
   rope,
@@ -114,104 +138,166 @@ export function playSound(
   volume,
   // Tecla presionada en el teclado
   keyfromkeyboard,
-  // Indicador de si la reproducción es mediante clic
+  // Indicador de si la reproducción es mediante un clic
   clickMode
 ) {
-  // Si la tecla ya está activa, evita reproducir la nota nuevamente
+  // Si la tecla ya está activa y no se está usando clickMode, evita reproducir la nota nuevamente
   if (keyfromkeyboard && !clickMode && activeKeys[keyfromkeyboard]) {
     return;
   }
 
-  // Marca la tecla como activa solo si es válida
+  // Marca la tecla como activa solo si es válida y no se está usando clickMode
   if (keyfromkeyboard && !clickMode) {
     activeKeys[keyfromkeyboard] = true;
   }
 
-  const audioPath = `/audio/${name}/mp3/`;
+  // Si no hay ningun formato soportado, detiene la ejecución de la función
+  if (!audioFormat) return;
 
-  // Encuentra la nota en cleanSoloNotes usando el rope
+  // Define la ruta de los archivos de audio según el nombre de la carpeta
+  const audioPath = `/audio/${name}/${audioFormat}/`;
+
+  // Encuentra la nota en el arreglo que se recibe desde el parametro data usando el número de cuerda (rope)
   const ropeData = data.find((note) => note.rope === rope);
-  const audioFormat = getSupportedAudioFormat();
-  if (!audioFormat) return; // Salir si no hay formato soportado
 
   if (ropeData) {
+    // Busca el acorde especificado dentro de los datos de la cuerda
     const fretData = ropeData.frets.find((fret) => fret.chord === chord);
+
+    // Imprime el valor de la propiedad rope del objeto ropeData (solamente para pruebas)
+    // Posibles valores: 1, 2, 3, 4, 5 o 6
     // console.log(ropeData.rope);
 
     if (fretData) {
+      // Genera el nombre completo del archivo de audio
+      // La propiedad file contiene el nombre del archivo de audio
       const audioFile = `${audioPath}${fretData.file}.${audioFormat}`;
+
+      // Imprime un objeto que contiene la ruta hacia el archivo como propiedad, esa propiedad
+      // Contiene una serie de propiedades y metodos definidos.
+      // console.log(players);
+
+      // Busca la propiedad que corresponde a la ruta del archivo
       const player = players[audioFile];
 
+      // Imprimir para una prueba, muestra un objeto que contiene las propiedades y metodos del archivo de audio actual
+      // console.log(typeof player);
+      // console.log(player);
+
+      // Si el archivo de audio no está en players, muestra un error y detiene la ejecución de la función
       if (!player) {
-        console.warn("Player not found for", audioFile);
+        console.error(
+          "No se encontro un reproductor para el archivo que se encuentra en ",
+          audioFile
+        );
         return;
       }
 
-      // Detener la nota anterior si es la misma que la actual
+      // Verifica si la nota anterior es la misma que la actual y la detiene si es así
+      // Esto evita que se reproduzca la misma nota repetidamente cuando ya está sonando
       if (
+        // Verifica que haya una nota activa en la cuerda
         activeNotes[rope] &&
+        // Verifica que el acorde es el mismo
         activeNotes[rope].chord === chord &&
+        // Verifica que existe una fuente de audio activa
         activeNotes[rope].source
       ) {
+        // Detiene la fuente de audio actual
         activeNotes[rope].source.stop();
         console.log(`Nota anterior (${rope}, ${chord}) detenida.`);
       }
 
-      // La nota anterior y la nota actual
-      // Al tocar una nota cuya cuerda coincida con la cuerda de la nota anterior, se debe silenciar la nota anterior.
-      // Detener la nota anterior si es la misma que la actual
+      // Detiene la nota anterior si se toca nuevamente la misma cuerda, incluso si el acorde es distinto
+      // Esto asegura que solo una nota suene por cuerda a la vez
       if (
         activeNotes[rope] &&
-        // activeNotes[rope].rope === rope &&
+        // Verifica que la cuerda es la misma
         ropeData.rope === rope &&
         activeNotes[rope].source
       ) {
+        // Detiene la fuente de audio actual en esa cuerda
         activeNotes[rope].source.stop();
         console.log(
           `Nota anterior (${rope}, ${chord}) detenida porque ha tocado la misma cuerda.`
         );
       }
 
-      // Opcionalmente (si o no) Al tocar una nota cuya cuerda sea diferente a la cuerda de la nota anterior, se debe silenciar la nota anterior.
+      // Si `muteOnDifferentRope` es true, detiene la nota anterior al cambiar de cuerda
+      // Esto permite que una nueva nota silencie cualquier otra nota que esté sonando en una cuerda diferente
       if (
+        // Verifica que haya una nota tocada previamente
         previousNotePlayed &&
+        // Verifica que la nota anterior tiene una cuerda válida
         previousNotePlayed.rope !== null &&
-        previousNotePlayed.rope !== rope && // Verifica que la cuerda anterior es diferente a la actual
-        activeNotes[previousNotePlayed.rope] && // Revisa si hay una nota activa en la cuerda anterior
+        // Asegura que la cuerda anterior es distinta a la actual
+        previousNotePlayed.rope !== rope &&
+        // Verifica que hay una nota activa en la cuerda anterior
+        activeNotes[previousNotePlayed.rope] &&
+        // Verifica que la fuente de audio de la nota anterior sigue activa
         activeNotes[previousNotePlayed.rope].source &&
+        // Verifica si el modo de silencio entre cuerdas está activado
         muteOnDifferentRope === true
       ) {
-        // Detener la nota anterior
-        activeNotes[previousNotePlayed.rope].source.stop();
+        activeNotes[previousNotePlayed.rope].source.stop(); // Detiene la nota anterior
         console.log(
           `Nota anterior (${previousNotePlayed.rope}, ${previousNotePlayed.chord}) detenida porque muteOnDifferentRope está en true.`
         );
 
-        // Elimina la referencia de la nota activa anterior
+        // Elimina la referencia a la nota activa en la cuerda anterior para evitar que se vuelva a detener innecesariamente
+        // Con el termino delete se elimina la propiedad de la nota en la cuerda anterior. Sintaxis: delete objeto[propiedad]
         delete activeNotes[previousNotePlayed.rope];
       }
 
-      // Configurar el amplificador con el valor recibido
-      const gainNode = new Tone.Gain(volume).toDestination();
+      // Establece el volumen con el valor recibido como argumento
+      const gainNode = new Tone.Gain(volume);
+
+      // Efectos de sonido, implementar esto en una futura actualización :)
+
+      // Crear un nodo de distorsión
+      // const distortionNode = new Tone.Distortion(0);
+
+      // Crear un nodo de reverb
+      // const reverbNode = new Tone.Reverb({
+      //   decay: 3,
+      //   preDelay: 0.1,
+      // });
+      // reverbNode.wet.value = 0;
+
       // Crear un nuevo bufferSource usando el buffer de `player`
       const bufferSource = new Tone.ToneBufferSource(player.buffer);
 
-      // No utilizar esto porque reproduce 2 veces el mismo sonido
+      // No encadenar el método toDestination porque reproduce 2 veces el mismo sonido
       // .toDestination();
 
       console.log(
         `La nota anterior ${previousNotePlayed.rope}, ${previousNotePlayed.chord} desde audioPlayer`
       );
 
-      bufferSource.connect(gainNode);
+      // Forma para conectar solamente el nodo de volumen.
+      // bufferSource.connect(gainNode);
+
+      // Forma para encadenar efectos de sonido con el metodo chain
+      bufferSource.chain(
+        gainNode,
+        // distortionNode,
+        // reverbNode,
+        Tone.getDestination()
+      );
+
+      // Nota: En versiones anteriores de Tone.Js se utilizaba la clase Destination en lugar del método getDestination.
+
+      // Reproduce el buffer
       bufferSource.start();
+
+      // Alamacena la nota anterior
       previousNotePlayed = { rope, chord };
 
-      // Almacenar la nueva nota activa
+      // Almacena la nueva cuerda activa
       activeNotes[rope] = { chord, source: bufferSource };
 
       console.log(
-        `Reproduciendo la nota ${rope}, ${chord} desde audioPlayer y amplificador ${volume}`
+        `Reproduciendo la nota ${rope}, ${chord} desde audioPlayer, el volumen esta en ${volume} %`
       );
 
       // Agrega un listener global solo si se usa una tecla
@@ -227,10 +313,11 @@ export function playSound(
         document.addEventListener("keyup", handleKeyUp);
       }
 
+      // Resetea el estado de la tecla después del clic
       if (clickMode === true) {
         console.log(clickMode);
         console.log("Modo de clic activado para la reproducción de la nota.");
-        activeKeys[keyfromkeyboard] = false; // Resetea el estado de la tecla después del clic
+        activeKeys[keyfromkeyboard] = false;
       }
     } else {
       console.log("Acorde no encontrado para esta cuerda.");
@@ -240,46 +327,55 @@ export function playSound(
   }
 }
 
-// Función generada con CHATGPT y modificada por mi cuenta para silenciar todas las notas
+// Función para silenciar todas las notas activas en todas las cuerdas
 export function muteAll() {
+  // Itera sobre cada cuerda en el objeto activeNotes
   for (const rope in activeNotes) {
-    // https://stackoverflow.com/questions/39282873/object-hasownproperty-yields-the-eslint-no-prototype-builtins-error-how-to
+    // Verifica que la propiedad pertenece a activeNotes y no a su prototipo
+    // Sintaxis correcta hasOwnProperty.call
     if (!activeNotes.hasOwnProperty.call(rope)) {
-      // console.log("FUNCION: " + activeNotes.hasOwnProperty.call(rope));
       const note = activeNotes[rope];
+
+      // Si la nota en esta cuerda tiene una fuente de audio activa, la detiene
       if (note.source) {
-        note.source.stop(); // Detener la fuente de audio
+        // Detener la reproducción de audio
+        note.source.stop();
         console.log(`Nota en cuerda ${rope} silenciada.`);
       }
-      delete activeNotes[rope]; // Eliminarla del objeto activeNotes
+
+      // Elimina la referencia de la nota en activeNotes para liberar recursos
+      delete activeNotes[rope];
     }
   }
 
-  // Restablecer previousNotePlayed si es necesario
+  // Restablece el registro de la última nota reproducida para indicar que no hay ninguna nota activa
   previousNotePlayed = { rope: null, chord: null };
   console.log("Todas las notas han sido silenciadas.");
 }
 
+// Función para silenciar solo la nota actualmente activa en la cuerda previa
 export function muteCurrentNote() {
   const { rope, chord } = previousNotePlayed;
 
-  // Verificar que haya una nota previa activa para silenciar
+  // Verifica si hay una nota activa previa que pueda ser silenciada
   if (rope !== null && chord !== null) {
     const note = activeNotes[rope];
 
+    // Si existe una fuente de audio activa en la cuerda previa, la detiene
     if (note && note.source) {
-      note.source.stop(); // Detener la fuente de audio de la nota actual
+      // Detener la reproducción de audio de la nota actual
+      note.source.stop();
       console.log(
         `Nota en cuerda ${rope}, acorde ${chord} ha sido silenciada.`
       );
 
-      // Eliminar la nota actual de activeNotes para reflejar que ya no está activa
+      // Elimina la referencia de la nota actual en activeNotes para liberar recursos
       delete activeNotes[rope];
     } else {
       console.log("No hay ninguna nota activa para silenciar.");
     }
 
-    // Restablecer previousNotePlayed para reflejar que ya no hay una nota actual activa
+    // Restablece previousNotePlayed para indicar que no hay ninguna nota activa actualmente
     previousNotePlayed = { rope: null, chord: null };
   } else {
     console.log("No hay ninguna nota activa para silenciar.");

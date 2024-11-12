@@ -1,55 +1,10 @@
-import { useEffect } from "react";
-import { muteCurrentNote, playSound } from "../services/audioPlayer";
 import PropTypes from "prop-types";
+import { useChord } from "../hooks/useChord";
 
 export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNotePlayed, mutePreviousChord, pulseMode, volume, showKeyboard }) => {
 
 
-    const note = { rope, chord };
-
-
-    const handlePlaySound = (clickMode) => {
-
-        handleNotePlayed(note);
-        playSound(name, data, rope, chord, mutePreviousChord, volume, keyfromkeyboard, clickMode);
-
-    };
-
-    const handleStopSound = () => {
-        muteCurrentNote()
-        // setIsPlayed(false); // Marca la nota como detenida
-
-    }
-
-
-    useEffect(() => {
-        const handleKeyDownPlaySound = (event) => {
-            if (event.key === keyfromkeyboard) {
-                handlePlaySound(false)
-            }
-
-        };
-
-        const handleKeyUpStopSound = (event) => {
-            // Si se suelta la tecla asignada y pulseMode es falso, se silencia la nota actual
-            if (event.key === keyfromkeyboard && pulseMode === true) {
-                //setIsPlayed(false)
-                handleStopSound();
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDownPlaySound);
-        window.addEventListener("keyup", handleKeyUpStopSound);
-
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDownPlaySound);
-            window.removeEventListener("keyup", handleKeyUpStopSound);
-
-        };
-
-    }, [keyfromkeyboard, pulseMode, handleNotePlayed]);
-
+    const { handlePlaySound, handleStopSound } = useChord(rope, chord, handleNotePlayed, data, mutePreviousChord, volume, name, keyfromkeyboard, pulseMode);
 
     return (<>
         {
@@ -83,7 +38,7 @@ export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNote
                 }}
             >
                 <div className="note-rope">
-                    <div className="key-rope">
+                    <div className="key-rope note" data-key={keyfromkeyboard}>
                         {/* Muestra las teclas si showKeyboard es igual a true */}
                         {showKeyboard === true ?
                             keyfromkeyboard === undefined ? "" : keyfromkeyboard

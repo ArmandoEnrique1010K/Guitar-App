@@ -1,4 +1,4 @@
-// Función de flecha para obtener el archivo asociado a las notas
+// Función de flecha para obtener la data asociada a las notas
 export const getNotes = (data) => {
   return data;
 };

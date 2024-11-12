@@ -5,7 +5,7 @@
 // - chord: el traste de la guitarra
 // - file: el nombre del archivo asociado a la nota*
 
-// *Una guitarra tiene notas que se repiten en cada cuerda, es por ello que hay un archivo excel, en el cual he mapeado las notas de la guitarra
+// Una guitarra tiene notas que se repiten en cada cuerda, es por ello que hay un archivo excel, en el cual he mapeado las notas de la guitarra
 export const cleanSoloNotes = [
   {
     rope: 1,

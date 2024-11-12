@@ -199,6 +199,10 @@ html {
 }
 
 .chord-button:hover {
+    background-color: var(--title-color);
+}
+
+.chord-button:active {
     background-color: var(--orange-color);
 }
 
@@ -211,6 +215,10 @@ html {
     height: 0.2em;
     width: 100%;
     /* margin-top: 0.8em; */
+}
+
+.key-rope.active {
+    background-color: var(--orange-color);
 }
 
 .key-rope {
