@@ -1,6 +1,6 @@
 # Guitar-App
 
-Versión 0.7 (10/11/2024)
+Versión 0.7.1 (11/11/2024)
 
 Simulador de guitarra electrica hecho con HTML, CSS, JavaScript, ReactJs y ToneJs
 
