@@ -5,6 +5,7 @@ import { cleanSoloNotes } from "../data/cleanSoloNotes"
 
 // Este componente contiene todas las rutas de la aplicación web
 export const GuitarRoutes = () => {
+
     return (
         <>
             <Routes>

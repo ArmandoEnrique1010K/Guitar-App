@@ -21,6 +21,7 @@ export const keyboardKeys = [
 ];
 
 // Los teclados tienen 4 filas de teclas
+// Esto no se implementa dentro del arreglo porque no hay teclas
 /*
   {
     row: 5,

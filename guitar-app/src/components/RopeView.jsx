@@ -10,7 +10,7 @@ export const RopeView = ({ data, rope, frets, name, handleNotePlayed, mutePrevio
                 {
                     // Utilizar dos puntos para cambiar el nombre de la propiedad key a keyfromkeyboard para que no haga conflicto con key (id)
                     frets.map(({ chord, key: keyfromkeyboard }) => (
-                        // No se puede colocar fragmentos (<></>) dentro de un map, porque causaria el error de que 
+                        // No se puede colocar fragmentos (<></>) dentro de un map, porque causaria un error.
                         <ChordView
                             key={`${rope}-${chord}`}
                             data={data}
