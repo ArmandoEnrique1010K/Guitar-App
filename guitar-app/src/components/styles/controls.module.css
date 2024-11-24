@@ -1,0 +1,304 @@
+/* Estilos para el rango de notas */
+.range-notes-container {
+    position: relative;
+    margin-right: 1em;
+    margin-left: 1em;
+    text-align: center;
+    /* Esto no se utiliza, porque el elemento padre contenedor llamado principal-container tiene definido el ancho */
+    /* width: 100%; */
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.range-notes {
+    appearance: none;
+    /* Elimina el estilo predeterminado de los navegadores */
+    width: 100%;
+    height: 0.5em;
+    /* Altura del slider */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    background: #ddd;
+    /* Fondo gris claro */
+    outline: none;
+    /* Elimina el borde del focus predeterminado */
+    transition: background 0.3s ease-in-out;
+    /* Transición para el fondo */
+}
+
+/* Estilo para el "thumb" (el control deslizante) */
+.range-notes::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 2em;
+    height: 1.5em;
+    border: solid 2px black;
+    border-radius: 50%;
+    background: var(--button-title-color);
+    /* Color verde para el control */
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Efecto al hacer hover sobre el "thumb" */
+.range-notes::-webkit-slider-thumb:hover {
+    background: var(--orange-color);
+    /* Oscurece el verde al hacer hover */
+}
+
+/* Barra de opciones */
+.options-container {
+    margin: 0 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.option-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.button-option-container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neck-guitar-color);
+    padding: 0.5em;
+    border-radius: 1.5em;
+    text-align: center;
+    margin: 0 0.5em;
+}
+
+.mute-options-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 1em;
+}
+
+.button-light-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.button-option {
+    border-radius: 3em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+    margin: auto
+}
+
+.button-option:hover {
+    background-color: var(--orange-color);
+}
+
+.button-option img {
+    width: 25px;
+}
+
+.light-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 2em
+}
+
+.option-light-off {
+    margin: auto;
+    background-color: red;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 1em;
+}
+
+.option-light-on {
+    margin: auto;
+    background-color: green;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 1em;
+
+}
+
+.option-keyboard {
+    color: var(--secondary-color);
+    font-family: var(--title-font);
+    font-size: 12px;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em
+}
+
+.button-option-container.select-mode {
+    /* Esto se puede mejorar */
+    height: 100%;
+}
+
+/* Estilo para el menú desplegable */
+.button-option-container select {
+    width: 10em;
+    padding: 0.5em;
+    font-size: 14px;
+    border: 2px solid var(--neck-guitar-color);
+    /* Borde personalizado */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    background-color: #f7f7f7;
+    /* Fondo claro */
+    color: #333;
+    /* Color del texto */
+    outline: none;
+    /* Quita el borde al hacer clic */
+    cursor: pointer;
+    /* Indica que es interactivo */
+    transition: background-color 0.3s, border-color 0.3s;
+    /* Animación para hover */
+    margin: auto;
+
+}
+
+/* Efecto hover para el select */
+.button-option-container select:hover {
+    background-color: #e6f0ff;
+    /* Cambia el fondo en hover */
+    border-color: #357ABD;
+    /* Cambia el color del borde en hover */
+}
+
+/* Estilo para las opciones del menú desplegable */
+.button-option-container option {
+    padding: 8px;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    color: #333;
+    align-items: center;
+}
+
+/* Estilo para la opción seleccionada */
+.button-option-container select:focus option:checked {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.button-muteAll-option {
+    background-color: white;
+    border: none;
+    border-radius: 3em;
+    padding: 0.5em 2em;
+    text-align: center;
+    width: 15em;
+    ;
+}
+
+.button-option {
+    border-radius: 3em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+
+}
+
+.button-muteAll-option:hover {
+    background-color: var(--orange-color);
+}
+
+
+.button-light-container-end {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-option-end {
+    border-radius: 3em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+    margin: auto
+}
+
+.button-option-end:hover {
+    background-color: var(--orange-color);
+}
+
+.button-option-end img {
+    width: 40px;
+}
+
+.light-container-end {
+    margin-top: 0.8em;
+    text-align: center;
+}
+
+/* AGREGAR DISEÑO ADAPTABLE A DISPOSITIVOS MOVILES */
+@media screen and (max-width: 1280px) {
+    /* .options-container {
+        flex-direction: column
+    } */
+
+    .button-option-container {
+        margin: 0 0.3em;
+        padding: 0.5em;
+    }
+
+    .button-option {
+        padding: 0.4em;
+    }
+
+
+    .light-container {
+        width: 1.5em;
+    }
+
+    .button-option-container select {
+        width: 7.5em;
+    }
+
+    .button-muteAll-option {
+        width: 10em;
+    }
+
+    /* ULTIMOS ICONOS */
+    .button-option-end img {
+        width: 2.5em;
+    }
+
+
+    .option-light-off {
+        width: 1em;
+        height: 0.3em;
+    }
+
+    .option-light-on {
+        width: 0.3em;
+        height: 0.3em;
+    }
+
+
+}
+
+/* AGREGAR DISEÑO ADAPTABLE A DISPOSITIVOS MOVILES */
+@media screen and (max-width: 1020px) {
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        align-content: start;
+        flex-wrap: wrap;
+    }
+
+    .option-group:nth-child(1) {
+        width: 100%;
+    }
+
+    .option-group:nth-child(2) {
+        margin-top: 2em;
+        width: 100%;
+        justify-content: end;
+    }
+
+    .button-muteAll-option {
+        width: 12em;
+    }
+}

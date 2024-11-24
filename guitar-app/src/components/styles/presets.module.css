@@ -1,0 +1,119 @@
+.presets-container {
+    height: 100%;
+    /* width: 100%; */
+    margin-right: 1em;
+    margin-left: 1em;
+    width: 100%;
+}
+
+.presets-list {
+    background-color: black;
+    height: 20em;
+    padding: 0.5em;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) black;
+    /* Color de la barra y fondo */
+}
+
+
+.presets-list::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho de la barra */
+}
+
+.presets-list::-webkit-scrollbar-track {
+    background: black;
+    /* Fondo del track */
+}
+
+.presets-list::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    /* Color de la barra */
+    border-radius: 4px;
+    /* Redondeo */
+}
+
+
+
+.one-preset {
+    width: 100%;
+    background-color: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* AQUI SE TIENE QUE AGREGAR UN ESTILO PARA RESALTAR EL HOVER */
+.one-preset:hover {
+    background-color: blue;
+}
+
+/* Cambia el color de .one-preset al hacer hover sobre .name-preset o .delete-preset */
+.name-preset:hover,
+.delete-preset:hover {
+    background-color: blue;
+}
+
+.name-preset:hover~.one-preset,
+.delete-preset:hover~.one-preset {
+    background-color: blue;
+}
+
+.name-preset {
+    background-color: black;
+    color: var(--secondary-color);
+    border: none;
+    height: 1.5em;
+    font-family: var(--message-font);
+    width: 100%;
+    text-align: left;
+}
+
+.delete-preset {
+    background-color: black;
+    color: red;
+    border: none;
+    height: 1.5em;
+    font-family: var(--message-font);
+    text-align: right;
+}
+
+.input-name-config {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    height: 2em;
+    padding: 1em;
+}
+
+
+.light-container {}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.config-button {
+    background-color: var(--button-title-color);
+    font-size: 0.9em;
+    border: none;
+    width: 8em;
+    border-radius: 1em;
+    font-family: var(--message-font);
+    margin-bottom: 1em;
+}
+
+.config-button:hover {
+    background-color: orange;
+}
+
+/* AGREGAR DISEÑO ADAPTABLE A DISPOSITIVOS MOVILES */
+@media screen and (max-width: 1220px) {
+    .presets-container {
+        padding-right: 2em;
+        margin-right: 100em;
+        margin-left: 1em;
+    }
+}

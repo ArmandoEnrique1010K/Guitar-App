@@ -8,7 +8,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* BrowserRouter habilita React Router para navegar entre paginas web */}
     <BrowserRouter>
+      {/* <GuitarProvider> */}
       <GuitarApp />
+      {/* </GuitarProvider> */}
     </BrowserRouter>
   </StrictMode>,
 )

@@ -1,0 +1,50 @@
+/* Contenedor principal */
+.container {
+    margin: auto;
+    width: 90%;
+}
+
+/* Spiner */
+.loading-spinner-container {
+    margin-top: 10em;
+    width: 100%;
+    text-align: center;
+}
+
+/* Estilos para el segundo contenedor */
+.main-container {
+    margin-top: 1.5em;
+    border: var(--orange-color), 5px outset;
+    margin-bottom: 1.5em;
+}
+
+/* Estilos para el separador entre el titulo y las opciones */
+.principal-separator {
+    background-color: var(--primary-color);
+    height: 1.5em;
+}
+
+
+/* Estilos para el contenedor del mastil de la guitarra */
+.neck-container {
+    background-color: var(--primary-color);
+
+}
+
+/* Estilos para los contenedores de efectos de sonidos y configuraciones establecidas */
+
+.effects-and-presets-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 1em
+}
+
+/* AGREGAR DISEÑO ADAPTABLE A DISPOSITIVOS MOVILES */
+@media screen and (max-width: 1220px) {
+    .effects-and-presets-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}

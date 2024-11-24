@@ -1,10 +1,15 @@
 import PropTypes from "prop-types";
 import { useChord } from "../hooks/useChord";
+import styles from "./styles/chord.module.css"
 
-export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNotePlayed, mutePreviousChord, pulseMode, volume, showKeyboard }) => {
+export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNotePlayed, mutePreviousChord, pulseMode, typeMode,
+    // volume, 
+    showKeyboard, effects }) => {
 
 
-    const { handlePlaySound, handleStopSound } = useChord(rope, chord, handleNotePlayed, data, mutePreviousChord, volume, name, keyfromkeyboard, pulseMode);
+    const { handlePlaySound, handleStopSound } = useChord(rope, chord, handleNotePlayed, data, mutePreviousChord,
+        // volume,
+        name, keyfromkeyboard, pulseMode, effects, typeMode);
 
     return (<>
         {
@@ -19,9 +24,12 @@ export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNote
 
         {/* onKeyUp={pulseMode === false || handleStopSound} */}
         {/* className dinamico, permite insertar una propiedad como un String */}
-        <div className={`chord-container rope-${rope} chord-${chord}`}>
+        {/* <div className={`chord-container rope-${rope} chord-${chord}`}> */}
+
+        <div className={styles['chord-container']}>
+
             <div
-                className="chord-button"
+                className={styles['chord-button']}
                 type="button"
                 onMouseDown={() => {
                     // Evento de click del raton
@@ -37,8 +45,12 @@ export const ChordView = ({ data, chord, rope, keyfromkeyboard, name, handleNote
                     if (!pulseMode) handlePlaySound(true);
                 }}
             >
-                <div className="note-rope">
-                    <div className="key-rope note" data-key={keyfromkeyboard}>
+                <div className={styles['note-rope']}>
+                    <div className={`${styles['note']}`} data-key={keyfromkeyboard}>
+
+                        {/* <div className="key-rope note" data-key={keyfromkeyboard}> */}
+
+
                         {/* Muestra las teclas si showKeyboard es igual a true */}
                         {showKeyboard === true ?
                             keyfromkeyboard === undefined ? "" : keyfromkeyboard
@@ -60,6 +72,8 @@ ChordView.propTypes = {
     handleNotePlayed: PropTypes.func,
     mutePreviousChord: PropTypes.bool,
     pulseMode: PropTypes.bool,
-    volume: PropTypes.number,
+    // volume: PropTypes.number,
     showKeyboard: PropTypes.bool,
+    typeMode: PropTypes.bool,
+    effects: PropTypes.object
 }

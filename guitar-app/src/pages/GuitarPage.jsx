@@ -1,7 +1,13 @@
 import { NeckView } from "../components/NeckView"
 import PropTypes from "prop-types"
-import { muteAll, } from "../services/audioPlayer"
 import { useGuitar } from "../hooks/useGuitar"
+import { ControlsView } from "../components/ControlsView"
+import { EffectsView } from "../components/EffectsView"
+
+import styles from "./guitarPage.module.css";
+import { useState } from "react"
+import { TitleView } from "../components/TitleView"
+import { PresetsView } from "../components/PresetsView"
 
 // Función principal del componente, recibe 2 propiedades (props): data y name
 export const GuitarPage = ({ data, name, nameGuitar }) => {
@@ -20,12 +26,12 @@ export const GuitarPage = ({ data, name, nameGuitar }) => {
         // typeKeyboard,
         mutePreviousChord,
         pulseMode,
-        volume,
+        // volume,
         showKeyboard,
         handleNotePlayed,
         onChangeRangeNotes,
         onChangeModeKeyboard,
-        onChangeVolume,
+        // onChangeVolume,
         redirectStartPage,
         onChangeLockZero,
         onChangeInvertKeyboard,
@@ -33,37 +39,109 @@ export const GuitarPage = ({ data, name, nameGuitar }) => {
         onChangepulseMode,
         onChangeShowKeyboard,
         message,
-
+        effects,
+        onChangeEnabledGain,
+        onChangeGain,
+        // setEffects,
+        onChangeEnabledDistortion,
+        onChangeDistortion,
+        // onChangeOversample,
+        onChangeEnabledReverb,
+        onChangeDecay,
+        // onChangePreDelay,
+        onChangeEnabledFeedbackDelay,
+        onChangeDelayTime,
+        onChangeFeedback,
+        onChangeEnabledVibrato,
+        onChangeFrequency,
+        onChangeDepth,
+        onChangeEnabledEq3,
+        onChangeLowLevel,
+        onChangeMidLevel,
+        onChangeHighLevel,
+        // CONFIGURACIONES
+        presets,
+        saveCurrentConfig,
+        applyPreset,
+        presetName,
+        onPresetNameChange,
+        deletePreset,
+        // currentPreset,
+        // handlerPresetSelected,
+        typeMode,
+        onClickDefaultConfig,
+        handlerPresetName
     } = useGuitar(data, name)
 
+    // Pasa props al context
+
+
+    // Llama al hook personalizado, solamente se utiliza las propiedades y metodos requeridos en la vista del usuario
+    // const {
+    //     first,
+    //     last,
+    //     middle,
+    //     alternate,
+    //     loading,
+    //     newNeck,
+    //     initialChord,
+    //     lockZeroChord,
+    //     invertKeyboard,
+    //     // typeKeyboard,
+    //     mutePreviousChord,
+    //     pulseMode,
+    //     volume,
+    //     showKeyboard,
+    //     handleNotePlayed,
+    //     onChangeRangeNotes,
+    //     onChangeModeKeyboard,
+    //     onChangeVolume,
+    //     redirectStartPage,
+    //     onChangeLockZero,
+    //     onChangeInvertKeyboard,
+    //     onMutePreviousChord,
+    //     onChangepulseMode,
+    //     onChangeShowKeyboard,
+    //     message,
+
+    // } = useGuitar(data, name)
+
+    const [showEffects, setShowEffects] = useState(false);
+
+    const onChangeShowEffects = () => {
+        setShowEffects(!showEffects)
+    }
+
+
+    const [showPresets, setShowPresets] = useState(false);
+
+    const onChangeShowPresets = () => {
+        setShowPresets(!showPresets)
+    }
 
     return (
         <>
-            <div className="container">
+            <div className={styles.container}>
 
                 {loading === true
-                    ? <div className="loading-spinner-container"><img src="/spinners/Spinner-200px.svg"></img></div>
+                    ? <div className={styles['loading-spinner-container']}><img src="/spinners/Spinner-200px.svg"></img></div>
                     : <>
-                        <div className="guitar-container">
+                        <div className={styles['main-container']}>
                             {/* Contenedor para el titulo */}
-                            <div className="title-container">
-                                <button className="button-title"><img width="25px" src="/icons/info-square.svg"></img></button>
-                                <div className="title-container-separator"></div>
-                                <div className="title-text">{nameGuitar}</div>
-                                <div className="title-container-separator"></div>
-                                <button className="button-title" onClick={redirectStartPage}><img width="25px" src="/icons/close-square.svg"></img></button>
-                            </div>
+                            <TitleView title={nameGuitar} functionCloseButton={redirectStartPage} />
 
-                            <div className="principal-separator"></div>
+                            <div className={styles['principal-separator']}></div>
 
                             {/* Contenedor principal */}
-                            <div className="principal-container">
-                                <NeckView neck={newNeck} name={name} data={data} handleNotePlayed={handleNotePlayed} mutePreviousChord={mutePreviousChord} pulseMode={pulseMode} volume={volume} message={message} showKeyboard={showKeyboard} />
+                            <div className={styles['neck-container']}>
+                                <NeckView neck={newNeck} name={name} data={data} handleNotePlayed={handleNotePlayed} mutePreviousChord={mutePreviousChord} pulseMode={pulseMode}
+                                    // volume={volume}
+                                    message={message} showKeyboard={showKeyboard} effects={effects} typeMode={typeMode} />
 
                                 {/* <input> de tipo rango para establecer el acorde inicial */}
 
                                 {/* <label htmlFor="rangeNotes">Empezar desde el acorde {initialChord}</label>*/}
-                                <div className="range-notes-container">
+                                {/* <div className="range-notes-container">
                                     <input
                                         className="range-notes"
                                         type="range"
@@ -74,7 +152,7 @@ export const GuitarPage = ({ data, name, nameGuitar }) => {
                                         step={1}
                                         value={initialChord} onChange={onChangeRangeNotes}
                                     />
-                                </div>
+                                </div> */}
 
                                 {/* Crea un arreglo (no utilizar esto) */}
                                 {/* // Si lockZeroChord es false, empieza en 0, si es true, empieza en 1 */}
@@ -87,114 +165,71 @@ export const GuitarPage = ({ data, name, nameGuitar }) => {
                                     }
                                 </div> */}
 
+                                {/* AQUI SE TIENE QUE DEFINIR UN CONTENEDOR PARA LOS CONTROLES Y EFECTOS DE SONIDO */}
+                                <ControlsView data={data} name={name} lockZeroChord={lockZeroChord} initialChord={initialChord} onChangeRangeNotes={onChangeRangeNotes} first={first}
+                                    last={last}
+                                    middle={middle}
+                                    alternate={alternate}
+                                    invertKeyboard={invertKeyboard}
+                                    onChangeModeKeyboard={onChangeModeKeyboard}
+                                    onChangeLockZero={onChangeLockZero}
+                                    onChangeInvertKeyboard={onChangeInvertKeyboard}
+                                    onMutePreviousChord={onMutePreviousChord}
+                                    onChangepulseMode={onChangepulseMode}
+                                    onChangeShowKeyboard={onChangeShowKeyboard}
+                                    showKeyboard={showKeyboard}
+                                    mutePreviousChord={mutePreviousChord}
+                                    pulseMode={pulseMode}
+                                    onChangeShowEffects={onChangeShowEffects}
+                                    showEffects={showEffects}
+                                    onChangeShowPresets={onChangeShowPresets}
+                                    showPresets={showPresets}
+
+                                />
+                                <div className={styles['principal-separator']}></div>
+
                                 {/* Contenedor para las opciones */}
-                                <div className="options-container">
-                                    <div className="option-group">
 
-                                        <div className="button-option-container">
-                                            <div className="button-light-container">
-                                                <button className="button-option" onClick={onChangeLockZero}>
-                                                    <img src="/icons/zero-circle-fill.svg" width="25px" alt="" />
-                                                </button>
-                                                <div className="light-container">
-                                                    <div className={lockZeroChord === false ? "option-light-off" : "option-light-on"}></div>
-                                                </div>
-                                            </div>
-                                            {showKeyboard === true ? (<div className="option-keyboard">CTRL left</div>) : ""}
-                                        </div>
+                                <div className={styles['effects-and-presets-container']}>
+                                    <>
+                                        {
+                                            // Operador ternario
+                                            // showEffects ? "Muestra efectos" : "No muestra efectos"
 
-                                        <div className="button-option-container">
-                                            <div className="button-light-container">
-                                                <button className="button-option" onClick={onChangeInvertKeyboard}>
-                                                    <img src="/icons/invert.svg" width="25px" alt="" />
-                                                </button>
-                                                <div className="light-container">
-                                                    <div className={invertKeyboard === false ? "option-light-off" : "option-light-on"}></div>
-                                                </div>
-                                            </div>
-                                            {showKeyboard === true ? (<div className="option-keyboard">ALT left</div>) : ""}
+                                            // Operador ternario simplificado
+                                            !showEffects || <EffectsView data={data} name={name} effects={effects} onChangeEnabledGain={onChangeEnabledGain} onChangeGain={onChangeGain}
+                                                onChangeEnabledDistortion={onChangeEnabledDistortion}
+                                                onChangeDistortion={onChangeDistortion}
+                                                onChangeEnabledReverb={onChangeEnabledReverb}
+                                                onChangeDecay={onChangeDecay}
+                                                onChangeEnabledFeedbackDelay={onChangeEnabledFeedbackDelay}
+                                                onChangeDelayTime={onChangeDelayTime}
+                                                onChangeFeedback={onChangeFeedback}
+                                                onChangeEnabledVibrato={onChangeEnabledVibrato}
+                                                onChangeFrequency={onChangeFrequency}
+                                                onChangeDepth={onChangeDepth}
+                                                onChangeEnabledEq3={onChangeEnabledEq3}
+                                                onChangeLowLevel={onChangeLowLevel}
+                                                onChangeMidLevel={onChangeMidLevel}
+                                                onChangeHighLevel={onChangeHighLevel}
+                                            />
 
-                                        </div>
+                                        }
 
-                                        <div className="button-option-container">
-                                            <div className="button-light-container">
 
-                                                <button className="button-option" onClick={onMutePreviousChord}>
-                                                    <img src="/icons/music-black-note-shape.svg" width="25px" alt="" />
-                                                </button>
-                                                <div className="light-container">
-                                                    <div className={mutePreviousChord === false ? "option-light-off" : "option-light-on"}></div>
-                                                </div>
+                                    </>
+                                    <>
+                                        {
+                                            !showPresets ||
+                                            <PresetsView typeMode={typeMode} saveCurrentConfig={saveCurrentConfig} presetName={presetName} onPresetNameChange={onPresetNameChange} onClickDefaultConfig={onClickDefaultConfig} presets={presets} applyPreset={applyPreset} deletePreset={deletePreset} handlerPresetName={handlerPresetName}
+                                            />
 
-                                            </div>
-                                            {showKeyboard === true ? (<div className="option-keyboard">TAB</div>) : ""}
+                                        }
 
-                                        </div>
-
-                                        <div className="button-option-container">
-                                            <div className="button-light-container">
-
-                                                <button className="button-option" onClick={onChangepulseMode}>
-                                                    <img src="/icons/pulse.svg" width="25px" alt="" />
-                                                </button>
-                                                <div className="light-container">
-                                                    <div className={pulseMode === false ? "option-light-off" : "option-light-on"}></div>
-                                                </div>
-                                            </div>
-                                            {showKeyboard === true ? (<div className="option-keyboard">Bloq Num</div>) : ""}
-
-                                        </div>
-
-                                        <div className="button-option-container">
-                                            <div className="button-light-container">
-
-                                                <button className="button-option" onClick={onChangeShowKeyboard}>
-                                                    <img src="/icons/eye.svg" width="25px" alt="" />
-                                                </button>
-                                                <div className="light-container">
-                                                    <div className={showKeyboard === false ? "option-light-off" : "option-light-on"}></div>
-                                                </div>
-                                            </div>
-                                            {showKeyboard === true ? (<div className="option-keyboard">ESC</div>) : ""}
-
-                                        </div>
-
-                                        <div className="button-option-container select-mode">
-                                            <select onChange={() => onChangeModeKeyboard(event.target.value)} name="modeKeys" id="selectModeKeys">
-                                                <option value={first}>First</option>
-                                                <option value={last}>Last</option>
-                                                <option value={middle}>Middle</option>
-                                                <option value={alternate}>Alternate</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    <div className="option-group">
-                                        <div className="button-option-container volume-range">
-                                            <input
-                                                className="range-notes"
-                                                type="range"
-                                                name="Volume"
-                                                id="rgAmplificador"
-                                                min={0}
-                                                max={2}
-                                                step={0.1}
-                                                value={volume} onChange={onChangeVolume} />
-                                        </div>
-                                    </div>
-
-                                    <div className="option-group">
-                                        <div className="button-option-container">
-                                            <button className="button-muteAll-option" onClick={muteAll}><img src="/icons/mute.svg" alt="" width="25px" /></button>
-                                            {showKeyboard === true ? (<div className="option-keyboard">Space</div>) : ""}
-
-                                        </div>
-
-                                    </div>
+                                    </>
 
                                 </div>
-                                <div className="principal-separator"></div>
-
+                                {/* <div className={styles['principal-separator']}></div> */}
 
                             </div>
 
@@ -202,7 +237,7 @@ export const GuitarPage = ({ data, name, nameGuitar }) => {
 
 
                     </>}
-            </div>
+            </div >
 
         </>
     )

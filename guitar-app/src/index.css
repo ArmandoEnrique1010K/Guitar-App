@@ -30,6 +30,7 @@
     --message-font: "Roboto-Light"
 }
 
+
 /* Aplica a todo el documento HTML */
 html {
     background-color: var(--background-color);

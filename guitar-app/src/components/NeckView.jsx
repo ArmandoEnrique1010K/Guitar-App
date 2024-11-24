@@ -1,7 +1,10 @@
 import PropTypes from "prop-types"
 import { RopeView } from "./RopeView"
+import styles from "./styles/neck.module.css";
 
-export const NeckView = ({ data, neck, name, handleNotePlayed, mutePreviousChord, pulseMode, volume, message, showKeyboard }) => {
+export const NeckView = ({ data, neck, name, handleNotePlayed, mutePreviousChord, pulseMode,
+    // volume, 
+    message, showKeyboard, effects, typeMode }) => {
 
     // Toma la cuerda con el indice 0 para
     // console.log(neck[0].frets.map(f => f.chord));
@@ -15,11 +18,11 @@ export const NeckView = ({ data, neck, name, handleNotePlayed, mutePreviousChord
         <>
 
 
-            <div className="neck-container">
+            <div className={styles['container']}>
                 {/* Lista única de todos los acordes, renderizada solo una vez debajo */}
-                <div className="chords-list-guitar">
+                <div className={styles['chords-list-guitar']}>
                     {chordsList.map((chord) => (
-                        <div className="number-chord-guitar" key={chord}>{chord}</div>
+                        <div className={styles['number-chord-guitar']} key={chord}>{chord}</div>
                     ))}
                 </div>
 
@@ -35,24 +38,60 @@ export const NeckView = ({ data, neck, name, handleNotePlayed, mutePreviousChord
                             data={data}
                             mutePreviousChord={mutePreviousChord}
                             pulseMode={pulseMode}
-                            volume={volume}
-                            showKeyboard={showKeyboard} />
+                            // volume={volume}
+                            showKeyboard={showKeyboard}
+                            effects={effects}
+                            typeMode={typeMode} />
                     ))
 
                 }
 
-                <div className="chords-list-guitar">
+                <div className={styles['chords-list-guitar']}>
                     {chordsList.map((chord) => (
-                        <div className="number-chord-guitar" key={chord}>{chord}</div>
+                        <div className={styles['number-chord-guitar']} key={chord}>{chord}</div>
                     ))}
                 </div>
 
+                {/* Multiplos de 3 */}
+                {/* <div className={styles['chords-list-guitar']}>
+                    {
+                        chordsList
+                            .filter(chord => chord % 3 === 0)
+                            .map(chord => (
+                                <div className={styles['number-chord-guitar']} key={chord}>
+                                    {chord}
+                                </div>
+                            ))
+                    }
+                </div> */}
 
-                <div className="message-container">
-                    <div className="message-text">{message}</div>
+                {/* Lista de números con estilo especial para múltiplos de 3 */}
+                {/* <div className={styles['circles-list-guitar']}>
+                    {
+                        chordsList.map((chord) => (
+                            <div className={styles['circle-container']} key={chord}>
+                                <div className={(chord % 3 === 0 ? styles['circle-3'] : "")
+
+
+                                }>
+                                    a
+                                </div>
+                                {
+                                    chord === 12 ? <div className={styles['circle-12']}>
+                                        a
+                                    </div> : ""
+                                }
+
+                            </div>
+                        ))
+                    }
+                </div> */}
+
+                <div className={styles['message-container']}>
+                    <div className={styles['message-text']}>{message}</div>
                 </div>
 
-            </div>
+            </div >
         </>
     )
 }
@@ -64,7 +103,9 @@ NeckView.propTypes = {
     handleNotePlayed: PropTypes.func,
     mutePreviousChord: PropTypes.bool,
     pulseMode: PropTypes.bool,
-    volume: PropTypes.number,
+    // volume: PropTypes.number,
     message: PropTypes.string,
     showKeyboard: PropTypes.bool,
+    effects: PropTypes.object,
+    typeMode: PropTypes.bool
 }

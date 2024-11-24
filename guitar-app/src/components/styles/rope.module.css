@@ -1,0 +1,9 @@
+.rope-container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    /* flex-wrap: nowrap; */
+    align-items: center;
+    justify-content: space-around;
+    align-content: center;
+}

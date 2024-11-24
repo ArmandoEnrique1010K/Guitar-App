@@ -1,0 +1,37 @@
+/* Contenedor del titulo */
+.title-container {
+    display: flex;
+    background-color: var(--background-color);
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* Botones para ver info y cerrar la guitarra al lado del titulo */
+.button-title {
+    background-color: var(--button-title-color);
+    display: flex;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.button-title img {
+    width: 2.2em;
+}
+
+/* Separadores en el contenedor del titulo */
+.title-container-separator {
+    margin: 1em;
+    flex-grow: 2;
+    background-color: var(--button-title-color);
+    /* width: auto; */
+    height: 0.5em;
+}
+
+/* Estilos para el titulo */
+.title-welcome {
+    text-align: center;
+    font-size: 2em;
+    margin: 0 0.5em;
+    color: var(--text-title-color);
+    font-family: var(--title-font);
+}

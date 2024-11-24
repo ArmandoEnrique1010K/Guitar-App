@@ -1,0 +1,283 @@
+.effects-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 2;
+}
+
+.effects-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.effect-box {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neck-guitar-color);
+    padding: 0.7em;
+    border-radius: 1.5em;
+    text-align: center;
+    margin: 0.5em;
+    margin-bottom: 1em;
+    width: 15em;
+}
+
+.button-and-light {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+/* BOTON DE CONFIGURACION */
+
+.button-option {
+    border-radius: 3em;
+    padding: 1em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+}
+
+.button-option:hover {
+    background-color: var(--orange-color);
+}
+
+.button-option img {
+    width: 2em;
+    height: 2em;
+    text-align: center;
+}
+
+
+
+/* LUCES */
+.light-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 2em
+}
+
+.option-light-off {
+    margin: auto;
+    background-color: red;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 1em;
+}
+
+.option-light-on {
+    margin: auto;
+    background-color: green;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 1em;
+
+}
+
+.input-range-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-text-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.text-label {
+    color: var(--secondary-color);
+    font-family: var(--message-font);
+    font-size: 0.8em;
+    margin-top: 0.8em
+}
+
+.input-range {
+    appearance: none;
+    /* Elimina el estilo predeterminado de los navegadores */
+    width: 100%;
+    height: 0.5em;
+    /* Altura del slider */
+    border-radius: 5px;
+    /* Bordes redondeados */
+    background: #ddd;
+    /* Fondo gris claro */
+    outline: none;
+    /* Elimina el borde del focus predeterminado */
+    transition: background 0.3s ease-in-out;
+    /* Transición para el fondo */
+    /* No va a funcionar */
+    /* margin-bottom: 0.8em; */
+}
+
+/* Estilo para el "thumb" (el control deslizante) */
+.input-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 2em;
+    height: 1.5em;
+    border: solid 2px black;
+    border-radius: 50%;
+    background: var(--button-title-color);
+    /* Color verde para el control */
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Efecto al hacer hover sobre el "thumb" */
+.input-range::-webkit-slider-thumb:hover {
+    background: var(--orange-color);
+    /* Oscurece el verde al hacer hover */
+}
+
+/* SOLAMENTE SI ESTA DESHABILITADO */
+.input-range[disabled]::-webkit-slider-thumb {
+    background-color: gray;
+}
+
+
+
+
+/* Barra de opciones */
+.options-container {
+    margin: 0 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.option-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.button-option-container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neck-guitar-color);
+    padding: 0.5em;
+    border-radius: 1.5em;
+    text-align: center;
+    margin: 0 0.5em;
+}
+
+
+.button-light-container {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.option-keyboard {
+    color: var(--secondary-color);
+    font-family: var(--title-font);
+    font-size: 12px;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em
+}
+
+.button-option-container.select-mode {
+    /* Esto se puede mejorar */
+    height: 4em;
+}
+
+/* Estilo para el menú desplegable */
+.button-option-container select {
+    width: 10em;
+    padding: 0.5em;
+    font-size: 14px;
+    border: 2px solid var(--neck-guitar-color);
+    /* Borde personalizado */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    background-color: #f7f7f7;
+    /* Fondo claro */
+    color: #333;
+    /* Color del texto */
+    outline: none;
+    /* Quita el borde al hacer clic */
+    cursor: pointer;
+    /* Indica que es interactivo */
+    transition: background-color 0.3s, border-color 0.3s;
+    /* Animación para hover */
+    margin: auto;
+
+}
+
+/* Efecto hover para el select */
+.button-option-container select:hover {
+    background-color: #e6f0ff;
+    /* Cambia el fondo en hover */
+    border-color: #357ABD;
+    /* Cambia el color del borde en hover */
+}
+
+/* Estilo para las opciones del menú desplegable */
+.button-option-container option {
+    padding: 8px;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    color: #333;
+    align-items: center;
+}
+
+/* Estilo para la opción seleccionada */
+.button-option-container select:focus option:checked {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.button-muteAll-option {
+    background-color: white;
+    border: none;
+    border-radius: 3em;
+    padding: 0.5em 2em;
+    text-align: center;
+    width: 15em;
+    ;
+}
+
+.button-option {
+    border-radius: 3em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+
+}
+
+/* .button-muteAll-option:hover {
+    background-color: var(--secondary-color);
+}
+
+
+.button-light-container-end {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-option-end {
+    border-radius: 3em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: var(--text-title-color);
+    border: none;
+    margin: auto
+}
+
+.button-option-end:hover {
+    background-color: var(--orange-color);
+}
+
+.button-option-end img {
+    width: 40px;
+}
+
+.light-container-end {
+    margin-top: 0.8em;
+    text-align: center;
+} */

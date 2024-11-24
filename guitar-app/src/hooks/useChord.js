@@ -7,10 +7,12 @@ export const useChord = (
   handleNotePlayed,
   data,
   mutePreviousChord,
-  volume,
+  // volume,
   name,
   keyfromkeyboard,
-  pulseMode
+  pulseMode,
+  effects,
+  typeMode
 ) => {
   const note = { rope, chord };
 
@@ -22,9 +24,10 @@ export const useChord = (
       rope,
       chord,
       mutePreviousChord,
-      volume,
+      // volume,
       keyfromkeyboard,
-      clickMode
+      clickMode,
+      effects
     );
   };
 
@@ -35,6 +38,8 @@ export const useChord = (
 
   useEffect(() => {
     const handleKeyDownPlaySound = (event) => {
+      // ESTO ES MEJOR EN LUGAR DE UTILIZAR UN && en event.key
+      if (typeMode === true) return;
       if (event.key === keyfromkeyboard) {
         handlePlaySound(false);
       }

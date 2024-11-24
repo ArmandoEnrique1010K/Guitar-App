@@ -135,11 +135,13 @@ export function playSound(
   // Modo de silencio en diferentes cuerdas
   muteOnDifferentRope,
   // Nivel de volumen
-  volume,
+  // volume,
   // Tecla presionada en el teclado
   keyfromkeyboard,
   // Indicador de si la reproducción es mediante un clic
-  clickMode
+  clickMode,
+  // Efectos de sonido
+  effects
 ) {
   // Si la tecla ya está activa y no se está usando clickMode, evita reproducir la nota nuevamente
   if (keyfromkeyboard && !clickMode && activeKeys[keyfromkeyboard]) {
@@ -250,12 +252,80 @@ export function playSound(
       }
 
       // Establece el volumen con el valor recibido como argumento
-      const gainNode = new Tone.Gain(volume);
+      // const gainNode = new Tone.Gain(volume);
+
+      const gainNode =
+        effects.gain && effects.gain.enabled
+          ? new Tone.Gain(effects.gain.gain)
+          : null;
 
       // Efectos de sonido, implementar esto en una futura actualización :)
 
-      // Crear un nodo de distorsión
-      // const distortionNode = new Tone.Distortion(0);
+      // // Crear un nodo de distorsión
+      // let distortionNode = null;
+      // // if (effects.distortion.enabled === false) {
+      // //   console.log("NO SE ACTIVO EL EFECTO DE DISTORSION");
+      // // }
+      // let reverbNode = null;
+
+      // if (effects.distortion.enabled === true) {
+      //   console.log("SE ACTIVO EL EFECTO DE DISTORSION");
+      //   distortionNode = new Tone.Distortion(
+      //     effects.distortion.distortion,
+      //     effects.distortion.oversample
+      //   );
+      // }
+
+      // if (effects.reverb.enabled === true) {
+      //   console.log("SE ACTIVO EL EFECTO DE ECO");
+      //   reverbNode = new Tone.Reverb(
+      //     effects.reverb.delay,
+      //     effects.reverb.preDelay
+      //   );
+      // }
+
+      const distortionNode =
+        effects.distortion && effects.distortion.enabled
+          ? new Tone.Distortion(
+              effects.distortion.distortion,
+              effects.distortion.oversample
+            )
+          : null;
+
+      const reverbNode =
+        effects.reverb && effects.reverb.enabled
+          ? new Tone.Reverb(
+              effects.reverb.decay
+              //  effects.reverb.preDelay
+            )
+          : null;
+
+      // Delay solamente realiza un retraso, en lugar de eso se utiliza FeedbackDelay
+      // Existe tambien Tone.PingPongDelay, pero alterna los canales derecha e izquierda del audifono del usuario
+      const feedbackDelayNode =
+        effects.feedbackDelay && effects.feedbackDelay.enabled
+          ? // FALTA MODIFICAR ESTO
+            new Tone.FeedbackDelay(
+              effects.feedbackDelay.delayTime,
+              effects.feedbackDelay.feedback
+            )
+          : null;
+
+      // const vibratoNode = new Tone.Vibrato(10, 0.5);
+      const vibratoNode =
+        effects.vibrato && effects.vibrato.enabled
+          ? new Tone.Vibrato(effects.vibrato.frequency, effects.vibrato.depth)
+          : null;
+
+      // EQUALIZADOR
+      const eq3Node =
+        effects.eq3 && effects.eq3.enabled
+          ? new Tone.EQ3(
+              effects.eq3.lowLevel,
+              effects.eq3.midLevel,
+              effects.eq3.highLevel
+            )
+          : null;
 
       // Crear un nodo de reverb
       // const reverbNode = new Tone.Reverb({
@@ -263,6 +333,27 @@ export function playSound(
       //   preDelay: 0.1,
       // });
       // reverbNode.wet.value = 0;
+
+      // OTROS NODOS DE PRUEBA
+
+      // NOTA GRUESA
+      //const chorusNode = new Tone.Chorus(1.5, 1, 0.7);
+      // ???
+      //const chorusNode = new Tone.AutoFilter(1, 200, 2.6);
+      // SI FUNCIONA ESTO,
+      // ¿¿const chorusNode = new Tone.AutoWah(100, 6, 0);
+
+      // ESTATICA DE BITS (NO IMPLEMENTAR PORQUE NO TIENE USOS)
+      // const chorusNode = new Tone.BitCrusher(12);
+
+      // TONO DE LA SEÑAL (¿PODRIA SER UTIL?)
+      // const chorusNode = new Tone.PitchShift(-4);
+
+      // FASE DE MOVIMIENTO (AGUA) -> SI FUNCIONA
+      // const chorusNode = new Tone.Phaser(1, 6, 10);
+
+      // EQUALIZADOR DE 3 NIVELES
+      //const chorusNode = new Tone.EQ3(-10, 3 - 10);
 
       // Crear un nuevo bufferSource usando el buffer de `player`
       const bufferSource = new Tone.ToneBufferSource(player.buffer);
@@ -277,13 +368,71 @@ export function playSound(
       // Forma para conectar solamente el nodo de volumen.
       // bufferSource.connect(gainNode);
 
-      // Forma para encadenar efectos de sonido con el metodo chain
-      bufferSource.chain(
-        gainNode,
-        // distortionNode,
-        // reverbNode,
-        Tone.getDestination()
-      );
+      let chainNodes = [];
+
+      // Agregar nodos de efectos si están definidos
+      // if (distortionNode) chainNodes.push(distortionNode);
+
+      if (gainNode) {
+        chainNodes = [...chainNodes, gainNode];
+      }
+
+      if (distortionNode) {
+        chainNodes = [...chainNodes, distortionNode];
+      }
+      // console.log([...chainNodes, distortionNode]);
+
+      if (reverbNode) {
+        chainNodes = [...chainNodes, reverbNode];
+      }
+
+      if (feedbackDelayNode) {
+        chainNodes = [...chainNodes, feedbackDelayNode];
+      }
+
+      if (vibratoNode) {
+        chainNodes = [...chainNodes, vibratoNode];
+      }
+
+      if (eq3Node) {
+        chainNodes = [...chainNodes, eq3Node];
+      }
+
+      // if (reverbNode) chainNodes.push(reverbNode);
+      // if (feedbackDelayNode) chainNodes.push(feedbackDelayNode);
+      // if (vibratoNode) chainNodes.push(vibratoNode);
+
+      // if (chorusNode) chainNodes.push(chorusNode);
+      // Conectar todos los nodos y el destino final
+      chainNodes.push(Tone.getDestination());
+      bufferSource.chain(...chainNodes);
+      console.log(chainNodes);
+
+      // // Forma para encadenar efectos de sonido con el metodo chain
+      // if (distortionNode === null && reverbNode === null) {
+      //   bufferSource.chain(
+      //     gainNode,
+      //     // reverbNode,
+      //     Tone.getDestination()
+      //   );
+      // }
+
+      // if (distortionNode === null) {
+      //   bufferSource.chain(gainNode, reverbNode, Tone.getDestination());
+      // }
+
+      // if (reverbNode === null) {
+      //   bufferSource.chain(gainNode, distortionNode, Tone.getDestination());
+      // }
+
+      // if (reverbNode !== null && distortionNode !== null) {
+      //   bufferSource.chain(
+      //     gainNode,
+      //     distortionNode,
+      //     reverbNode,
+      //     Tone.getDestination()
+      //   );
+      // }
 
       // Nota: En versiones anteriores de Tone.Js se utilizaba la clase Destination en lugar del método getDestination.
 
@@ -296,9 +445,7 @@ export function playSound(
       // Almacena la nueva cuerda activa
       activeNotes[rope] = { chord, source: bufferSource };
 
-      console.log(
-        `Reproduciendo la nota ${rope}, ${chord} desde audioPlayer, el volumen esta en ${volume} %`
-      );
+      console.log(`Reproduciendo la nota ${rope}, ${chord} desde audioPlayer`);
 
       // Agrega un listener global solo si se usa una tecla
       if (keyfromkeyboard && clickMode === false) {
