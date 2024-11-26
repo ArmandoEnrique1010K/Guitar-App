@@ -10,7 +10,11 @@ Simulador de guitarra electrica hecho con HTML, CSS, JavaScript, ReactJs y ToneJ
 
 <img src="assets/2024-11-23-22-49-17-image.png" title="" alt="" data-align="center">Para ejecutar este proyecto, es necesario tener instalado Node.js y Visual Studio Code. Sigue estos pasos:
 
+Puedes ir al siguiente link para ver el proyecto en producción, aunque aun me faltan varios ajustes...
+https://bejewelled-smakager-045ecc.netlify.app/cleanSolo
+
 1. Descarga este proyecto y arrastra la carpeta "guitar-app" al editor de codigo fuente.
 2. Abre una nueva terminal, clic en "Terminal", opción "New Terminal".
 3. Introduce el comando "npm install" para instalar todas las dependencias asociadas al proyecto.
 4. Introduce el comando "npm run dev" y ve a la URL "http://localhost:5173/"
+
