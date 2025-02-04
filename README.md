@@ -18,3 +18,4 @@ https://bejewelled-smakager-045ecc.netlify.app
 3. Introduce el comando "npm install" para instalar todas las dependencias asociadas al proyecto.
 4. Introduce el comando "npm run dev" y ve a la URL "http://localhost:5173/"
 
+Tarea pendiente: mejorar este proyecto, plazo limite: 30/04/2025
